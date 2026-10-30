@@ -1,0 +1,2114 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Returix Business — Retouren-Intelligence für Händler</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:       #F5F3EE;
+      --white:       #FFFFFF;
+      --ink:         #0E0E0C;
+      --stone:       #E8E5DE;
+      --stone-dark:  #D4D0C8;
+      --warm-grey:   #5A5A56;
+      --muted-grey:  #9A9A95;
+      --green:       #1A5E38;
+      --green-l:     #EAF3EE;
+      --green-b:     #B8D6C4;
+      --amber:       #92550A;
+      --amber-l:     #FDF4E8;
+      --amber-b:     #E8C98A;
+      --red:         #B83232;
+      --red-l:       #FDF0F0;
+      --red-b:       #E8AAAA;
+
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans:  'Roboto', system-ui, sans-serif;
+      --r-sm: 8px;
+      --r-md: 12px;
+      --r-lg: 16px;
+      --shadow-sm: 0 1px 4px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: flex; flex-direction: column; min-height: 100dvh; }
+
+    /* ──────────────────────────────
+       LOGIN SCREEN
+    ────────────────────────────── */
+    #screen-login {
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+    }
+
+    .login-box { width: 100%; max-width: 420px; text-align: center; }
+
+    .login-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 44px;
+    }
+
+    .logo-mark {
+      width: 38px; height: 38px;
+      border-radius: 26%;
+      background: var(--ink);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .logo-mark svg { width: 100%; height: 100%; display: block; }
+
+    .login-logo-name {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 22px;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+    }
+    .login-logo-name span {
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted-grey);
+      margin-left: 8px;
+      vertical-align: 2px;
+    }
+
+    .login-headline {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(28px, 6vw, 40px);
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+
+    .login-sub {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--warm-grey);
+      line-height: 1.75;
+      margin-bottom: 36px;
+      max-width: 360px;
+      margin-left: auto; margin-right: auto;
+    }
+
+    .login-features { display: flex; flex-direction: column; gap: 10px; margin-bottom: 36px; text-align: left; }
+
+    .login-feature {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--white);
+      border: 1px solid var(--stone);
+      border-radius: var(--r-md);
+      padding: 14px 16px;
+    }
+    .login-feature-icon {
+      width: 34px; height: 34px;
+      background: var(--green-l);
+      border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; color: var(--green);
+    }
+    .login-feature-title { font-size: 13px; font-weight: 500; }
+    .login-feature-desc  { font-size: 12px; color: var(--muted-grey); }
+    .stage-tag {
+      display: inline-block;
+      margin-left: 8px;
+      font-size: 9px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      background: var(--stone); color: var(--warm-grey);
+      border-radius: 99px; padding: 1px 8px;
+      vertical-align: 1px;
+    }
+    .stage-tag.live { background: var(--green-l); color: var(--green); }
+
+    .login-input {
+      width: 100%;
+      background: var(--white);
+      border: 1px solid var(--stone-dark);
+      border-radius: var(--r-md);
+      padding: 14px 16px;
+      font-family: var(--font-sans);
+      font-size: 15px;
+      color: var(--ink);
+      margin-bottom: 12px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .login-input:focus { border-color: var(--ink); }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--ink);
+      color: var(--cream);
+      border: none;
+      border-radius: var(--r-md);
+      padding: 14px 24px;
+      font-family: var(--font-sans);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .login-privacy { font-size: 11px; color: var(--muted-grey); line-height: 1.6; margin-top: 16px; }
+
+    /* ──────────────────────────────
+       APP SHELL
+    ────────────────────────────── */
+    .app-header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--stone);
+    }
+    .app-header-top {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px; height: 56px;
+      border-bottom: 1px solid var(--stone);
+    }
+    .app-logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .app-logo .logo-mark { width: 28px; height: 28px; }
+    .app-logo-name {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 18px;
+      letter-spacing: -0.3px;
+    }
+    .app-logo-name span {
+      font-family: var(--font-sans); font-style: normal;
+      font-size: 9px; font-weight: 500; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--muted-grey);
+      margin-left: 6px; vertical-align: 2px;
+    }
+
+    .app-header-right { display: flex; align-items: center; gap: 12px; }
+    .shop-badge {
+      font-size: 12px; font-weight: 500;
+      background: var(--cream);
+      border: 1px solid var(--stone);
+      border-radius: 99px;
+      padding: 5px 14px;
+      color: var(--warm-grey);
+    }
+    .shop-badge strong { color: var(--ink); font-weight: 500; }
+
+    .app-nav-bar {
+      display: flex; align-items: center;
+      padding: 0 32px; height: 42px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .app-nav-bar::-webkit-scrollbar { display: none; }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 6px;
+      padding: 0 14px; height: 42px;
+      border: none; background: transparent; cursor: pointer;
+      font-family: var(--font-sans);
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted-grey);
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.12s;
+    }
+    .nav-item:hover { color: var(--warm-grey); }
+    .nav-item.active { color: var(--ink); border-bottom-color: var(--ink); }
+    .nav-pill {
+      font-size: 8px; font-weight: 500; letter-spacing: 0.08em;
+      background: var(--amber-l); color: var(--amber);
+      border-radius: 99px; padding: 1px 7px;
+    }
+
+    .view { display: none; }
+    .view.active { display: block; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+    .view-inner { padding: 32px; max-width: 1060px; margin: 0 auto; }
+    .view-inner.narrow { max-width: 760px; }
+
+    .view-title {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 28px;
+      letter-spacing: -0.4px;
+      margin-bottom: 4px;
+    }
+    .view-subtitle { font-size: 14px; font-weight: 300; color: var(--warm-grey); margin-bottom: 28px; }
+
+    /* ── Cards & KPIs ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--stone);
+      border-radius: var(--r-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .card + .card { margin-top: 16px; }
+
+    .card-label {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted-grey);
+      margin-bottom: 12px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .kpi-card {
+      background: var(--white);
+      border: 1px solid var(--stone);
+      border-radius: var(--r-lg);
+      padding: 20px 22px;
+      box-shadow: var(--shadow-sm);
+    }
+    .kpi-label {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted-grey);
+      margin-bottom: 8px;
+    }
+    .kpi-value {
+      font-family: var(--font-serif);
+      font-size: 30px;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+    .kpi-value.red   { color: var(--red); }
+    .kpi-value.green { color: var(--green); }
+    .kpi-value.amber { color: var(--amber); }
+    .kpi-sub { font-size: 11px; color: var(--muted-grey); margin-top: 6px; }
+
+    .dash-grid {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    /* chart */
+    .chart-wrap { width: 100%; overflow: hidden; }
+    .chart-wrap svg { display: block; width: 100%; height: auto; }
+
+    /* reason bars */
+    .reason-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .reason-row:last-child { margin-bottom: 0; }
+    .reason-name { flex: 0 0 168px; font-size: 12.5px; color: var(--warm-grey); }
+    .reason-track { flex: 1; height: 8px; background: var(--cream); border-radius: 99px; overflow: hidden; }
+    .reason-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+    .reason-pct { flex: 0 0 64px; text-align: right; font-size: 12.5px; font-weight: 500; }
+
+    /* tables */
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table thead th {
+      text-align: left;
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted-grey);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--stone);
+      white-space: nowrap;
+    }
+    .data-table tbody td {
+      padding: 11px 12px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--stone);
+      vertical-align: top;
+    }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .data-table th.num { text-align: right; }
+
+    .quote-pill {
+      display: inline-block;
+      font-size: 12px; font-weight: 500;
+      border-radius: 99px; padding: 2px 10px;
+    }
+    .quote-pill.bad  { background: var(--red-l);   color: var(--red); }
+    .quote-pill.warn { background: var(--amber-l); color: var(--amber); }
+    .quote-pill.ok   { background: var(--green-l); color: var(--green); }
+
+    .reason-chip {
+      display: inline-block;
+      font-size: 11px;
+      background: var(--cream);
+      border: 1px solid var(--stone);
+      border-radius: 99px;
+      padding: 2px 9px;
+      color: var(--warm-grey);
+      white-space: nowrap;
+    }
+
+    /* empty state */
+    .empty-state {
+      text-align: center;
+      padding: 64px 24px;
+      background: var(--white);
+      border: 1px dashed var(--stone-dark);
+      border-radius: var(--r-lg);
+    }
+    .empty-state-icon {
+      width: 56px; height: 56px;
+      background: var(--green-l); color: var(--green);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+    }
+    .empty-state h3 { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: 22px; margin-bottom: 8px; }
+    .empty-state p { font-size: 13.5px; font-weight: 300; color: var(--warm-grey); max-width: 420px; margin: 0 auto 22px; }
+    .empty-state-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+    .btn-secondary {
+      background: var(--white);
+      color: var(--ink);
+      border: 1px solid var(--stone-dark);
+      border-radius: var(--r-md);
+      padding: 11px 20px;
+      font-family: var(--font-sans);
+      font-size: 13.5px; font-weight: 500;
+      cursor: pointer;
+      transition: box-shadow 0.15s;
+    }
+    .btn-secondary:hover { box-shadow: var(--shadow-md); }
+
+    .btn-inline {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--ink); color: var(--cream);
+      border: none; border-radius: var(--r-md);
+      padding: 11px 20px;
+      font-family: var(--font-sans);
+      font-size: 13.5px; font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn-inline:hover { opacity: 0.85; }
+    .btn-inline:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-danger {
+      background: transparent; color: var(--red);
+      border: 1px solid var(--red-b);
+      border-radius: var(--r-md);
+      padding: 10px 18px;
+      font-family: var(--font-sans);
+      font-size: 13px; font-weight: 500;
+      cursor: pointer;
+    }
+    .btn-danger:hover { background: var(--red-l); }
+
+    /* ── Upload ── */
+    .dropzone {
+      border: 2px dashed var(--stone-dark);
+      border-radius: var(--r-lg);
+      padding: 40px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      background: var(--white);
+    }
+    .dropzone.dragover { border-color: var(--green); background: var(--green-l); }
+    .dropzone-icon {
+      width: 44px; height: 44px;
+      background: var(--cream); color: var(--warm-grey);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px;
+    }
+    .dropzone h4 { font-size: 14.5px; font-weight: 500; margin-bottom: 4px; }
+    .dropzone p { font-size: 12.5px; color: var(--muted-grey); }
+
+    .upload-meta {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+      margin-top: 16px;
+    }
+    .upload-meta-info { font-size: 12.5px; color: var(--warm-grey); }
+    .link-btn {
+      background: none; border: none;
+      font-family: var(--font-sans);
+      font-size: 12.5px; font-weight: 500;
+      color: var(--green);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      padding: 0;
+    }
+
+    .filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .filter-chip {
+      border: 1px solid var(--stone-dark);
+      background: var(--white);
+      border-radius: 99px;
+      padding: 5px 14px;
+      font-family: var(--font-sans);
+      font-size: 12px; font-weight: 500;
+      color: var(--warm-grey);
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+    .filter-chip.active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+
+    /* ── KI-Analyse ── */
+    .ai-hero {
+      display: flex; align-items: flex-start; gap: 16px;
+      background: linear-gradient(135deg, var(--green-l), var(--white));
+      border: 1px solid var(--green-b);
+      border-radius: var(--r-lg);
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .ai-hero-icon {
+      width: 44px; height: 44px; flex-shrink: 0;
+      background: var(--green); color: var(--cream);
+      border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ai-hero h3 { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: 20px; margin-bottom: 4px; }
+    .ai-hero p { font-size: 13px; font-weight: 300; color: var(--warm-grey); max-width: 560px; }
+
+    .ai-status-line { display: flex; align-items: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+    .ai-mode-badge {
+      font-size: 11px; font-weight: 500;
+      border-radius: 99px; padding: 3px 12px;
+    }
+    .ai-mode-badge.live { background: var(--green-l); color: var(--green); border: 1px solid var(--green-b); }
+    .ai-mode-badge.demo { background: var(--amber-l); color: var(--amber); border: 1px solid var(--amber-b); }
+
+    .ai-loading { text-align: center; padding: 48px 24px; }
+    .ai-spinner {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--green-l); color: var(--green);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+    .ai-spinner::after {
+      content: '';
+      position: absolute; inset: -6px;
+      border-radius: 50%;
+      border: 2px solid var(--green-b);
+      border-top-color: var(--green);
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .ai-loading-label { font-size: 13px; color: var(--warm-grey); }
+
+    .ai-summary {
+      background: var(--white);
+      border: 1px solid var(--stone);
+      border-left: 3px solid var(--green);
+      border-radius: var(--r-md);
+      padding: 20px 22px;
+      margin-bottom: 16px;
+      font-size: 14px; font-weight: 300;
+      line-height: 1.75;
+      color: var(--warm-grey);
+    }
+    .ai-summary strong { color: var(--ink); font-weight: 500; }
+
+    .rec-card {
+      background: var(--white);
+      border: 1px solid var(--stone);
+      border-radius: var(--r-lg);
+      padding: 20px 22px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+    .rec-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+    .rec-product { font-size: 14.5px; font-weight: 500; }
+    .prio-pill {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      border-radius: 99px; padding: 3px 12px;
+    }
+    .prio-pill.hoch    { background: var(--red-l);   color: var(--red); }
+    .prio-pill.mittel  { background: var(--amber-l); color: var(--amber); }
+    .prio-pill.niedrig { background: var(--green-l); color: var(--green); }
+    .rec-problem { font-size: 13px; color: var(--warm-grey); margin-bottom: 10px; }
+    .rec-action {
+      background: var(--cream);
+      border-radius: var(--r-sm);
+      padding: 12px 14px;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+    .rec-action-label {
+      font-size: 9.5px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--green);
+      display: block; margin-bottom: 4px;
+    }
+    .rec-impact { font-size: 12px; color: var(--muted-grey); margin-top: 10px; }
+    .rec-impact strong { color: var(--green); font-weight: 500; }
+
+    .analysis-meta { font-size: 11.5px; color: var(--muted-grey); margin-bottom: 16px; }
+
+    /* ── Risiko-Radar ── */
+    .risk-progress-card { margin-bottom: 16px; }
+    .risk-progress-track { height: 10px; background: var(--cream); border-radius: 99px; overflow: hidden; margin: 14px 0 8px; }
+    .risk-progress-fill { height: 100%; background: linear-gradient(90deg, var(--green-b), var(--green)); border-radius: 99px; transition: width 0.5s ease; }
+    .risk-progress-label { font-size: 12px; color: var(--muted-grey); }
+
+    .risk-preview {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--r-lg);
+    }
+    .risk-preview-badge {
+      position: absolute; top: 14px; right: 14px; z-index: 2;
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      background: var(--ink); color: var(--cream);
+      border-radius: 99px; padding: 4px 12px;
+    }
+    .risk-alert {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: var(--white);
+      border: 1px solid var(--stone);
+      border-left: 3px solid var(--amber);
+      border-radius: var(--r-md);
+      padding: 16px 18px;
+      margin-bottom: 10px;
+    }
+    .risk-alert-icon {
+      width: 34px; height: 34px; flex-shrink: 0;
+      background: var(--amber-l); color: var(--amber);
+      border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .risk-alert-title { font-size: 13.5px; font-weight: 500; margin-bottom: 2px; }
+    .risk-alert-desc { font-size: 12.5px; color: var(--warm-grey); }
+    .risk-alert-desc em { color: var(--amber); font-style: normal; font-weight: 500; }
+
+    .steps-list { counter-reset: step; }
+    .step-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--stone); }
+    .step-item:last-child { border-bottom: none; }
+    .step-num {
+      counter-increment: step;
+      width: 28px; height: 28px; flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--cream);
+      border: 1px solid var(--stone-dark);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-serif); font-style: italic;
+      font-size: 13px;
+    }
+    .step-num::before { content: counter(step); }
+    .step-title { font-size: 13.5px; font-weight: 500; margin-bottom: 2px; }
+    .step-desc { font-size: 12.5px; color: var(--warm-grey); }
+
+    /* ── Settings ── */
+    .settings-row { padding: 18px 0; border-bottom: 1px solid var(--stone); }
+    .settings-row:last-child { border-bottom: none; }
+    .settings-row-title { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+    .settings-row-desc { font-size: 12.5px; color: var(--warm-grey); margin-bottom: 12px; max-width: 520px; }
+    .settings-input {
+      width: 100%; max-width: 420px;
+      background: var(--cream);
+      border: 1px solid var(--stone-dark);
+      border-radius: var(--r-sm);
+      padding: 10px 14px;
+      font-family: var(--font-sans);
+      font-size: 13.5px;
+      outline: none;
+    }
+    .settings-input:focus { border-color: var(--ink); background: var(--white); }
+    .settings-inline { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+    .integration-card {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--cream);
+      border: 1px solid var(--stone);
+      border-radius: var(--r-md);
+      padding: 16px 18px;
+    }
+    .integration-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      background: var(--white);
+      border: 1px solid var(--stone);
+      border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--warm-grey);
+    }
+    .integration-title { font-size: 13.5px; font-weight: 500; }
+    .integration-desc { font-size: 12px; color: var(--muted-grey); }
+    .integration-badge {
+      margin-left: auto;
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      background: var(--amber-l); color: var(--amber);
+      border-radius: 99px; padding: 3px 12px;
+      white-space: nowrap;
+    }
+
+    /* ── Kostenübersicht ── */
+    .cost-line {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 12px; padding: 9px 0;
+      border-bottom: 1px solid var(--stone);
+      font-size: 13px; color: var(--warm-grey);
+    }
+    .cost-line strong { font-weight: 500; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .cost-line.total { border-bottom: none; padding-top: 12px; }
+    .cost-line.total span { font-weight: 500; color: var(--ink); }
+    .cost-line.total strong { font-family: var(--font-serif); font-size: 20px; color: var(--red); }
+    .cost-note { font-size: 11.5px; color: var(--muted-grey); margin-top: 10px; line-height: 1.6; }
+
+    .dash-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: -16px 0 24px; }
+
+    /* ── Maßnahmen-Tracker ── */
+    .rec-card.done { opacity: 0.6; }
+    .rec-card.done .rec-product { text-decoration: line-through; text-decoration-thickness: 1px; }
+    .rec-done-btn {
+      background: var(--white); color: var(--warm-grey);
+      border: 1px solid var(--stone-dark);
+      border-radius: 99px;
+      padding: 6px 14px;
+      font-family: var(--font-sans);
+      font-size: 12px; font-weight: 500;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: all 0.12s;
+    }
+    .rec-done-btn:hover { border-color: var(--green); color: var(--green); }
+    .rec-done-btn.done { background: var(--green-l); border-color: var(--green-b); color: var(--green); }
+    .rec-progress { font-size: 12.5px; color: var(--warm-grey); margin-bottom: 14px; }
+    .rec-progress strong { color: var(--green); font-weight: 500; }
+
+    /* ── Import-Modus ── */
+    .import-mode { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 14px; font-size: 12.5px; color: var(--warm-grey); }
+    .import-mode label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .import-mode input { accent-color: var(--green); }
+
+    /* ── Risiko: echte Muster ── */
+    .pattern-row { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--stone); }
+    .pattern-row:last-child { border-bottom: none; }
+    .pattern-num {
+      font-family: var(--font-serif); font-size: 22px; line-height: 1.2;
+      color: var(--amber); min-width: 52px; text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .pattern-title { font-size: 13.5px; font-weight: 500; margin-bottom: 2px; }
+    .pattern-desc { font-size: 12.5px; color: var(--warm-grey); }
+
+    /* ── Print / PDF-Bericht ── */
+    @media print {
+      body { background: #fff; font-size: 12px; }
+      .app-header { position: static; }
+      .app-nav-bar, .no-print, #toast, .ai-hero, .btn-inline, .btn-secondary, .dash-actions { display: none !important; }
+      .card, .kpi-card { box-shadow: none; break-inside: avoid; }
+      .view-inner { padding: 0; max-width: none; }
+    }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translate(-50%, 20px);
+      background: var(--ink); color: var(--cream);
+      border-radius: var(--r-md);
+      padding: 12px 22px;
+      font-size: 13px;
+      box-shadow: var(--shadow-md);
+      opacity: 0; pointer-events: none;
+      transition: all 0.25s ease;
+      z-index: 999;
+      max-width: min(90vw, 480px);
+      text-align: center;
+    }
+    #toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .dash-grid { grid-template-columns: 1fr; }
+      .app-header-top, .app-nav-bar { padding: 0 16px; }
+      .view-inner { padding: 20px 16px; }
+      .reason-name { flex-basis: 120px; }
+      .table-scroll { overflow-x: auto; }
+      .table-scroll .data-table { min-width: 680px; }
+    }
+    @media (max-width: 480px) {
+      .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .kpi-value { font-size: 24px; }
+      .shop-badge { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN ══════════════ -->
+<div id="screen-login" class="screen active">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Returix Logo"><rect x="31" y="31" width="38" height="38" rx="10" fill="#FFFFFF"/><path d="M45.5 42h8.2v7.7H62L50 61 38 49.7h7.5z" fill="#0E0E0C"/></svg>
+      </div>
+      <div class="login-logo-name">Returix<span>Business</span></div>
+    </div>
+
+    <h1 class="login-headline">Verstehe deine Retouren.<br>Verhindere die nächsten.</h1>
+    <p class="login-sub">Nur 7,3&nbsp;% der Online-Händler nutzen KI im Retourenmanagement — 45,5&nbsp;% wollen es bald. Returix Business bringt dich auf die richtige Seite dieser Statistik.</p>
+
+    <div class="login-features">
+      <div class="login-feature">
+        <div class="login-feature-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
+        </div>
+        <div>
+          <div class="login-feature-title">Retouren-Dashboard <span class="stage-tag live">Stufe 1</span></div>
+          <div class="login-feature-desc">Anzahl, Wert und Gründe deiner Retouren — per CSV-Upload in Minuten startklar.</div>
+        </div>
+      </div>
+      <div class="login-feature">
+        <div class="login-feature-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4-2.5 5.5S15 17.5 15 19H9c0-1.5-.5-3-1.5-4.5S5 11.5 5 9a7 7 0 0 1 7-7z"/><path d="M9 22h6"/></svg>
+        </div>
+        <div>
+          <div class="login-feature-title">KI-Analyse mit Claude <span class="stage-tag live">Stufe 2</span></div>
+          <div class="login-feature-desc">Konkrete Handlungsempfehlungen pro Produkt statt bloßer Tabellen.</div>
+        </div>
+      </div>
+      <div class="login-feature">
+        <div class="login-feature-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        </div>
+        <div>
+          <div class="login-feature-title">Risikovorhersage <span class="stage-tag">Stufe 3</span></div>
+          <div class="login-feature-desc">Alerts bei riskanten Bestellungen — sobald genug Historie im System ist.</div>
+        </div>
+      </div>
+    </div>
+
+    <input type="text" id="login-shop-name" class="login-input" placeholder="Name deines Shops (z. B. UNSPOKEN Studio)" autocomplete="organization">
+    <button class="btn-primary" onclick="doLogin()">Dashboard öffnen →</button>
+    <p class="login-privacy">Alle Daten bleiben lokal in deinem Browser. Kein Account, kein Server-Upload.</p>
+  </div>
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="screen-app" class="screen">
+  <header class="app-header">
+    <div class="app-header-top">
+      <div class="app-logo" onclick="showView('dashboard')">
+        <div class="logo-mark">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Returix Logo"><rect x="31" y="31" width="38" height="38" rx="10" fill="#FFFFFF"/><path d="M45.5 42h8.2v7.7H62L50 61 38 49.7h7.5z" fill="#0E0E0C"/></svg>
+        </div>
+        <div class="app-logo-name">Returix<span>Business</span></div>
+      </div>
+      <div class="app-header-right">
+        <div class="shop-badge">Shop: <strong id="shop-badge-name">—</strong></div>
+      </div>
+    </div>
+    <nav class="app-nav-bar">
+      <button class="nav-item active" id="nav-dashboard" onclick="showView('dashboard')">Übersicht</button>
+      <button class="nav-item" id="nav-analyse" onclick="showView('analyse')">KI-Analyse</button>
+      <button class="nav-item" id="nav-risiko" onclick="showView('risiko')">Risiko-Radar <span class="nav-pill">Stufe 3</span></button>
+      <button class="nav-item" id="nav-daten" onclick="showView('daten')">Daten</button>
+      <button class="nav-item" id="nav-einstellungen" onclick="showView('einstellungen')">Einstellungen</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- DASHBOARD -->
+    <div class="view active" id="view-dashboard">
+      <div class="view-inner" id="dashboard-content"></div>
+    </div>
+
+    <!-- KI-ANALYSE -->
+    <div class="view" id="view-analyse">
+      <div class="view-inner narrow">
+        <p class="view-title">KI-Analyse</p>
+        <p class="view-subtitle">Claude analysiert deine Retourendaten und liefert konkrete Empfehlungen pro Produkt.</p>
+        <div id="analyse-content"></div>
+      </div>
+    </div>
+
+    <!-- RISIKO-RADAR -->
+    <div class="view" id="view-risiko">
+      <div class="view-inner narrow">
+        <p class="view-title">Risiko-Radar</p>
+        <p class="view-subtitle">Retouren verhindern, bevor sie entstehen — Alerts bei Bestellungen mit hohem Retourenrisiko.</p>
+        <div id="risiko-content"></div>
+      </div>
+    </div>
+
+    <!-- DATEN -->
+    <div class="view" id="view-daten">
+      <div class="view-inner">
+        <p class="view-title">Retourendaten</p>
+        <p class="view-subtitle">CSV-Upload deiner Retouren. Später synchronisiert Shopify das automatisch.</p>
+        <div id="daten-content"></div>
+      </div>
+    </div>
+
+    <!-- EINSTELLUNGEN -->
+    <div class="view" id="view-einstellungen">
+      <div class="view-inner narrow">
+        <p class="view-title">Einstellungen</p>
+        <p class="view-subtitle">Shop, KI-Zugang und Integrationen.</p>
+        <div id="einstellungen-content"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toast"></div>
+<input type="file" id="csv-file-input" accept=".csv,text/csv" style="display:none;">
+
+<script>
+/* ═══════════════════════════════════════════
+   RETURIX BUSINESS — B2B Retouren-Intelligence
+   Stufe 1: Dashboard + CSV-Upload (Ersetzen/Ergänzen, Export, PDF-Bericht)
+   Stufe 2: KI-Analyse (Claude API) + Maßnahmen-Tracker
+   Stufe 3: Risikovorhersage (Vorschau) + echte Risikomuster aus den Daten
+   Extras:  Prozesskosten-Rechner, 30-Tage-Trend, Größen-Hotspots
+   ═══════════════════════════════════════════ */
+
+const STORAGE_KEY = 'returix_b2b_v1';
+
+const REASONS = [
+  { id: 'groesse',      label: 'Größe passt nicht',           color: '#B83232', keywords: ['größe', 'groesse', 'size', 'zu klein', 'zu groß', 'zu gross', 'passt nicht', 'passform'] },
+  { id: 'qualitaet',    label: 'Qualität enttäuschend',       color: '#92550A', keywords: ['qualität', 'qualitaet', 'quality', 'defekt', 'beschädigt', 'beschaedigt', 'kaputt', 'mangel'] },
+  { id: 'beschreibung', label: 'Nicht wie beschrieben',       color: '#5A5A56', keywords: ['beschreibung', 'beschrieben', 'anders als', 'abbildung', 'farbe weicht', 'described'] },
+  { id: 'gefallen',     label: 'Gefällt nicht',               color: '#9A9A95', keywords: ['gefällt', 'gefaellt', 'gefallen', 'geschmack', 'doch nicht', 'umentschieden'] },
+  { id: 'lieferung',    label: 'Zu spät geliefert',           color: '#1A5E38', keywords: ['spät', 'spaet', 'lieferzeit', 'zu lange', 'verspätet', 'verspaetet'] },
+  { id: 'falsch',       label: 'Falscher Artikel',            color: '#D4A017', keywords: ['falsch', 'wrong', 'vertauscht', 'anderer artikel'] },
+  { id: 'sonstiges',    label: 'Sonstiges',                   color: '#D4D0C8', keywords: [] },
+];
+
+let state = {
+  shopName: '',
+  apiKey: '',
+  costPerReturn: 12.5, // geschätzte Prozesskosten pro Retoure in EUR (Porto, Handling, Prüfung, Wiedereinlagerung)
+  returns: [],       // {datum:'YYYY-MM-DD', bestellnr, produkt, kategorie, groesse, wert, grund(id), grundText, verkaeufe}
+  salesByProduct: {},// {produkt: totalSold}
+  isDemo: false,
+  lastAnalysis: null,// {ts, mode:'claude'|'demo', zusammenfassung, empfehlungen:[]}
+  doneRecs: {}       // {'<analysisTs>:<recIndex>': true} — abgehakte Maßnahmen
+};
+
+/* ── Persistence ─────────────────────────── */
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* quota */ }
+}
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state = Object.assign(state, JSON.parse(raw));
+  } catch (e) { /* corrupt */ }
+}
+
+/* ── Helpers ─────────────────────────────── */
+function eur(n) {
+  return n.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+}
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function toast(msg, ms = 3200) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), ms);
+}
+function reasonById(id) { return REASONS.find(r => r.id === id) || REASONS[REASONS.length - 1]; }
+
+function normalizeReason(text) {
+  const t = String(text || '').toLowerCase().trim();
+  for (const r of REASONS) {
+    if (r.id === 'sonstiges') continue;
+    if (r.label.toLowerCase() === t) return r.id;
+    if (r.keywords.some(k => t.includes(k))) return r.id;
+  }
+  return 'sonstiges';
+}
+
+function parseGermanDate(s) {
+  s = String(s || '').trim();
+  let m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);           // ISO
+  if (m) return `${m[1]}-${m[2]}-${m[3]}`;
+  m = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})/);          // DD.MM.YYYY
+  if (m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);          // DD/MM/YYYY
+  if (m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  return null;
+}
+
+function parseMoney(s) {
+  s = String(s || '').replace(/[€\s]/g, '');
+  if (s.includes(',') && s.includes('.')) s = s.replace(/\./g, '').replace(',', '.');
+  else if (s.includes(',')) s = s.replace(',', '.');
+  const n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
+}
+
+/* ── CSV Parsing ─────────────────────────── */
+function parseCSV(text) {
+  // detect delimiter from header line
+  const firstLine = text.slice(0, text.indexOf('\n') > -1 ? text.indexOf('\n') : text.length);
+  const delim = (firstLine.split(';').length > firstLine.split(',').length) ? ';' : ',';
+
+  const rows = [];
+  let cur = [], field = '', inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { field += '"'; i++; }
+        else inQuotes = false;
+      } else field += c;
+    } else {
+      if (c === '"') inQuotes = true;
+      else if (c === delim) { cur.push(field); field = ''; }
+      else if (c === '\n' || c === '\r') {
+        if (c === '\r' && text[i + 1] === '\n') i++;
+        cur.push(field); field = '';
+        if (cur.some(f => f.trim() !== '')) rows.push(cur);
+        cur = [];
+      } else field += c;
+    }
+  }
+  cur.push(field);
+  if (cur.some(f => f.trim() !== '')) rows.push(cur);
+  return rows;
+}
+
+const COLUMN_ALIASES = {
+  datum:      ['datum', 'date', 'retourendatum', 'rückgabedatum', 'rueckgabedatum'],
+  bestellnr:  ['bestellnummer', 'bestellnr', 'order', 'ordernummer', 'order_id', 'bestell-nr'],
+  produkt:    ['produkt', 'product', 'artikel', 'artikelname', 'produktname', 'item'],
+  kategorie:  ['kategorie', 'category', 'warengruppe'],
+  groesse:    ['größe', 'groesse', 'size', 'grösse'],
+  wert:       ['wert', 'preis', 'betrag', 'price', 'value', 'amount', 'warenwert'],
+  grund:      ['grund', 'retourengrund', 'reason', 'rückgabegrund', 'rueckgabegrund'],
+  verkaeufe:  ['verkäufe', 'verkaeufe', 'verkauftemenge', 'verkaufte_menge', 'sales', 'sold', 'verkauft'],
+};
+
+function importCSV(text) {
+  const rows = parseCSV(text);
+  if (rows.length < 2) throw new Error('Die Datei enthält keine Datenzeilen.');
+
+  const header = rows[0].map(h => h.toLowerCase().trim().replace(/^﻿/, ''));
+  const colIndex = {};
+  for (const [key, aliases] of Object.entries(COLUMN_ALIASES)) {
+    colIndex[key] = header.findIndex(h => aliases.includes(h));
+  }
+  if (colIndex.produkt === -1 || colIndex.grund === -1) {
+    throw new Error('Pflichtspalten fehlen: „Produkt" und „Grund" werden benötigt. Lade die CSV-Vorlage herunter, um das Format zu sehen.');
+  }
+
+  const imported = [];
+  const sales = {};
+  let skipped = 0;
+
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i];
+    const get = k => colIndex[k] > -1 ? (row[colIndex[k]] || '').trim() : '';
+    const produkt = get('produkt');
+    if (!produkt) { skipped++; continue; }
+
+    const grundText = get('grund');
+    const entry = {
+      datum: parseGermanDate(get('datum')) || new Date().toISOString().slice(0, 10),
+      bestellnr: get('bestellnr') || ('#' + (10000 + i)),
+      produkt,
+      kategorie: get('kategorie') || '—',
+      groesse: get('groesse') || '—',
+      wert: parseMoney(get('wert')),
+      grund: normalizeReason(grundText),
+      grundText,
+    };
+    imported.push(entry);
+
+    const v = parseInt(get('verkaeufe'), 10);
+    if (!isNaN(v) && v > 0) sales[produkt] = Math.max(sales[produkt] || 0, v);
+  }
+
+  if (!imported.length) throw new Error('Keine gültigen Zeilen gefunden.');
+
+  // Import-Modus: ersetzen oder ergänzen (Duplikate überspringen)
+  const modeEl = document.querySelector('input[name="import-mode"]:checked');
+  const append = modeEl && modeEl.value === 'append' && state.returns.length > 0 && !state.isDemo;
+
+  let added = imported.length, duplicates = 0;
+  if (append) {
+    const keyOf = r => [r.datum, r.bestellnr, r.produkt, r.groesse].join('||');
+    const existing = new Set(state.returns.map(keyOf));
+    const fresh = imported.filter(r => !existing.has(keyOf(r)));
+    duplicates = imported.length - fresh.length;
+    added = fresh.length;
+    state.returns = state.returns.concat(fresh).sort((a, b) => b.datum.localeCompare(a.datum));
+    for (const [prod, v] of Object.entries(sales)) {
+      state.salesByProduct[prod] = Math.max(state.salesByProduct[prod] || 0, v);
+    }
+  } else {
+    state.returns = imported;
+    state.salesByProduct = sales;
+  }
+
+  state.isDemo = false;
+  state.lastAnalysis = null;
+  state.doneRecs = {};
+  saveState();
+  showView('dashboard');
+  toast(`${added} Retouren importiert${duplicates ? ` (${duplicates} Duplikate übersprungen)` : ''}${skipped ? ` (${skipped} Zeilen ohne Produkt übersprungen)` : ''}.`);
+}
+
+function downloadTemplate() {
+  const lines = [
+    'Datum;Bestellnummer;Produkt;Kategorie;Groesse;Wert;Grund;Verkaeufe',
+    '15.06.2026;#10234;Satin-Kleid Vera;Kleider;38;89,99;Größe passt nicht;120',
+    '16.06.2026;#10241;Oversized Blazer Milan;Blazer;M;119,00;Qualität enttäuschend;95',
+    '18.06.2026;#10250;Wide-Leg Hose Ary;Hosen;40;79,99;Artikel nicht wie beschrieben;140',
+  ];
+  const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'returix_vorlage.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('CSV-Vorlage heruntergeladen.');
+}
+
+/* ── Demo-Daten ──────────────────────────── */
+function seededRandom(seed) {
+  let s = seed;
+  return () => { s = (s * 1103515245 + 12345) % 2147483648; return s / 2147483648; };
+}
+
+function loadDemoData() {
+  const products = [
+    // [name, kategorie, preis, verkäufe, retouren, grundVerteilung {id: gewicht}]
+    ['Satin-Kleid „Vera"',        'Kleider', 89.99, 120, 80, { groesse: 0.72, gefallen: 0.12, beschreibung: 0.10, qualitaet: 0.06 }],
+    ['Oversized Blazer „Milan"',  'Blazer',  119.00, 95, 42, { groesse: 0.55, qualitaet: 0.25, gefallen: 0.20 }],
+    ['Wide-Leg Hose „Ary"',       'Hosen',    79.99, 140, 49, { groesse: 0.62, beschreibung: 0.18, gefallen: 0.20 }],
+    ['Seidenbluse „Noa"',         'Blusen',   99.99, 88, 30, { qualitaet: 0.52, beschreibung: 0.24, gefallen: 0.24 }],
+    ['Rippstrick-Kleid „Lia"',    'Kleider',  64.99, 160, 45, { groesse: 0.48, gefallen: 0.30, beschreibung: 0.22 }],
+    ['Basic Shirt „Uni"',         'Shirts',   24.99, 320, 26, { groesse: 0.35, gefallen: 0.40, qualitaet: 0.25 }],
+    ['Leinenhemd „Porto"',        'Hemden',   69.99, 110, 21, { groesse: 0.44, qualitaet: 0.30, gefallen: 0.26 }],
+    ['Cargo-Rock „Skye"',         'Röcke',    54.99, 130, 33, { groesse: 0.58, beschreibung: 0.26, gefallen: 0.16 }],
+    ['Wollmantel „Nord"',         'Mäntel',  199.00, 60, 17, { qualitaet: 0.38, groesse: 0.32, gefallen: 0.30 }],
+    ['Denim-Jacke „Rio"',         'Jacken',   94.99, 105, 24, { groesse: 0.40, falsch: 0.15, gefallen: 0.30, lieferung: 0.15 }],
+  ];
+  const sizes = { Kleider: ['34','36','38','40','42'], Blazer: ['S','M','L','XL'], Hosen: ['36','38','40','42'], Blusen: ['S','M','L'], Shirts: ['XS','S','M','L','XL'], Hemden: ['S','M','L','XL'], 'Röcke': ['34','36','38','40'], 'Mäntel': ['S','M','L'], Jacken: ['S','M','L','XL'] };
+
+  const rnd = seededRandom(42);
+  const returns = [];
+  const sales = {};
+  let orderNo = 10200;
+  const today = new Date();
+
+  for (const [name, kat, preis, verk, ret, dist] of products) {
+    sales[name] = verk;
+    const reasonPool = [];
+    for (const [rid, w] of Object.entries(dist)) {
+      for (let i = 0; i < Math.round(w * 100); i++) reasonPool.push(rid);
+    }
+    for (let i = 0; i < ret; i++) {
+      const daysAgo = Math.floor(rnd() * 90);
+      const d = new Date(today);
+      d.setDate(d.getDate() - daysAgo);
+      const sz = sizes[kat] || ['—'];
+      returns.push({
+        datum: d.toISOString().slice(0, 10),
+        bestellnr: '#' + (orderNo += 1 + Math.floor(rnd() * 4)),
+        produkt: name,
+        kategorie: kat,
+        groesse: sz[Math.floor(rnd() * sz.length)],
+        wert: preis,
+        grund: reasonPool[Math.floor(rnd() * reasonPool.length)],
+        grundText: '',
+      });
+    }
+  }
+  // Auswahlbestellungen simulieren: gleiches Produkt, gleiche Bestellung, zwei Größen
+  let paired = 0;
+  for (let i = 0; i < returns.length - 1 && paired < 14; i++) {
+    const a = returns[i], b = returns[i + 1];
+    if (a.produkt === b.produkt && a.groesse !== b.groesse && a.grund === 'groesse') {
+      b.bestellnr = a.bestellnr;
+      b.datum = a.datum;
+      paired++;
+    }
+  }
+  returns.sort((a, b) => b.datum.localeCompare(a.datum));
+
+  state.returns = returns;
+  state.salesByProduct = sales;
+  state.isDemo = true;
+  state.lastAnalysis = null;
+  state.doneRecs = {};
+  saveState();
+  renderAll();
+  toast(`Demo-Datensatz geladen: ${returns.length} Retouren aus 90 Tagen.`);
+}
+
+function clearData() {
+  if (!confirm('Alle Retourendaten und die letzte Analyse wirklich löschen?')) return;
+  state.returns = [];
+  state.salesByProduct = {};
+  state.isDemo = false;
+  state.lastAnalysis = null;
+  state.doneRecs = {};
+  saveState();
+  renderAll();
+  toast('Daten gelöscht.');
+}
+
+/* ── Statistiken ─────────────────────────── */
+function computeStats() {
+  const R = state.returns;
+  const total = R.length;
+  const value = R.reduce((s, r) => s + (r.wert || 0), 0);
+
+  const byReason = {};
+  for (const r of R) byReason[r.grund] = (byReason[r.grund] || 0) + 1;
+
+  const byProduct = {};
+  for (const r of R) {
+    if (!byProduct[r.produkt]) byProduct[r.produkt] = { produkt: r.produkt, kategorie: r.kategorie, count: 0, value: 0, reasons: {} };
+    const p = byProduct[r.produkt];
+    p.count++;
+    p.value += r.wert || 0;
+    p.reasons[r.grund] = (p.reasons[r.grund] || 0) + 1;
+  }
+  const products = Object.values(byProduct).map(p => {
+    const sold = state.salesByProduct[p.produkt] || null;
+    const quote = sold ? (p.count / sold) * 100 : null;
+    const topReason = Object.entries(p.reasons).sort((a, b) => b[1] - a[1])[0];
+    return { ...p, sold, quote, topReason: topReason ? topReason[0] : 'sonstiges', topReasonCount: topReason ? topReason[1] : 0 };
+  }).sort((a, b) => (b.quote ?? -1) - (a.quote ?? -1) || b.count - a.count);
+
+  const totalSold = Object.values(state.salesByProduct).reduce((s, v) => s + v, 0);
+  const totalQuote = totalSold ? (total / totalSold) * 100 : null;
+
+  // weekly buckets, last 12 weeks
+  const weeks = [];
+  const now = new Date();
+  for (let w = 11; w >= 0; w--) {
+    const end = new Date(now); end.setDate(end.getDate() - w * 7);
+    const start = new Date(end); start.setDate(start.getDate() - 6);
+    weeks.push({ start, end, count: 0, label: `${start.getDate()}.${start.getMonth() + 1}.` });
+  }
+  for (const r of R) {
+    const d = new Date(r.datum + 'T12:00:00');
+    for (const wk of weeks) {
+      if (d >= new Date(wk.start.toDateString()) && d <= new Date(wk.end.toDateString() + ' 23:59:59')) { wk.count++; break; }
+    }
+  }
+
+  // data span in days
+  let spanDays = 0;
+  if (R.length) {
+    const dates = R.map(r => r.datum).sort();
+    spanDays = Math.max(1, Math.round((new Date(dates[dates.length - 1]) - new Date(dates[0])) / 86400000) + 1);
+  }
+
+  const topReasonEntry = Object.entries(byReason).sort((a, b) => b[1] - a[1])[0];
+
+  // 30-Tage-Vergleich (aktuelle 30 Tage vs. die 30 Tage davor)
+  const nowTs = Date.now();
+  const cut30 = nowTs - 30 * 86400000;
+  const cut60 = nowTs - 60 * 86400000;
+  const last30 = { count: 0, value: 0 }, prev30 = { count: 0, value: 0 };
+  for (const r of R) {
+    const t = new Date(r.datum + 'T12:00:00').getTime();
+    if (t >= cut30) { last30.count++; last30.value += r.wert || 0; }
+    else if (t >= cut60) { prev30.count++; prev30.value += r.wert || 0; }
+  }
+  const trend30 = prev30.count > 0 ? ((last30.count - prev30.count) / prev30.count) * 100 : null;
+
+  // Größen-Hotspots: nur größenbedingte Retouren
+  const bySize = {};
+  const sizeCombos = {};
+  for (const r of R) {
+    if (r.grund !== 'groesse' || !r.groesse || r.groesse === '—') continue;
+    bySize[r.groesse] = (bySize[r.groesse] || 0) + 1;
+    const key = r.produkt + '||' + r.groesse;
+    if (!sizeCombos[key]) sizeCombos[key] = { produkt: r.produkt, groesse: r.groesse, count: 0 };
+    sizeCombos[key].count++;
+  }
+  const topSizeCombo = Object.values(sizeCombos).sort((a, b) => b.count - a.count)[0] || null;
+
+  // Auswahlbestellungen: gleiche Bestellung, gleiches Produkt, mehrere Größen retourniert
+  const orderSizes = {};
+  for (const r of R) {
+    if (!r.bestellnr || !r.groesse || r.groesse === '—') continue;
+    const key = r.bestellnr + '||' + r.produkt;
+    (orderSizes[key] = orderSizes[key] || new Set()).add(r.groesse);
+  }
+  const multiSizeOrders = Object.values(orderSizes).filter(s => s.size >= 2).length;
+
+  const processCost = total * (state.costPerReturn || 0);
+
+  return { total, value, byReason, products, totalQuote, totalSold, weeks, spanDays, topReason: topReasonEntry ? topReasonEntry[0] : null,
+           last30, prev30, trend30, bySize, topSizeCombo, multiSizeOrders, processCost };
+}
+
+function quoteClass(q) {
+  if (q == null) return 'ok';
+  if (q >= 45) return 'bad';
+  if (q >= 25) return 'warn';
+  return 'ok';
+}
+
+/* ── SVG Chart: Retouren pro Woche ───────── */
+function weeklyChartSVG(weeks) {
+  const W = 560, H = 180, padL = 30, padB = 26, padT = 12;
+  const max = Math.max(1, ...weeks.map(w => w.count));
+  const bw = (W - padL - 10) / weeks.length;
+  let bars = '', labels = '', grid = '';
+
+  for (let g = 0; g <= 3; g++) {
+    const val = Math.round(max * g / 3);
+    const y = H - padB - (H - padB - padT) * g / 3;
+    grid += `<line x1="${padL}" y1="${y}" x2="${W - 6}" y2="${y}" stroke="#E8E5DE" stroke-width="1"/>
+             <text x="${padL - 6}" y="${y + 4}" text-anchor="end" font-size="10" fill="#9A9A95">${val}</text>`;
+  }
+  weeks.forEach((wk, i) => {
+    const h = (H - padB - padT) * wk.count / max;
+    const x = padL + i * bw + bw * 0.18;
+    const y = H - padB - h;
+    bars += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw * 0.64).toFixed(1)}" height="${h.toFixed(1)}" rx="3" fill="${i === weeks.length - 1 ? '#1A5E38' : '#B8D6C4'}"><title>${wk.label} — ${wk.count} Retouren</title></rect>`;
+    if (i % 2 === 0) labels += `<text x="${(padL + i * bw + bw / 2).toFixed(1)}" y="${H - 8}" text-anchor="middle" font-size="9.5" fill="#9A9A95">${wk.label}</text>`;
+  });
+
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Retouren pro Woche">${grid}${bars}${labels}</svg>`;
+}
+
+/* ── RENDER: Dashboard ───────────────────── */
+function renderDashboard() {
+  const el = document.getElementById('dashboard-content');
+  if (!state.returns.length) {
+    el.innerHTML = `
+      <p class="view-title">Übersicht</p>
+      <p class="view-subtitle">Dein Retouren-Cockpit — sobald Daten da sind.</p>
+      <div class="empty-state">
+        <div class="empty-state-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
+        </div>
+        <h3>Noch keine Retourendaten</h3>
+        <p>Lade deine Retouren als CSV hoch oder starte mit dem Demo-Datensatz eines Fashion-Shops, um Returix Business kennenzulernen.</p>
+        <div class="empty-state-actions">
+          <button class="btn-inline" onclick="showView('daten')">CSV hochladen</button>
+          <button class="btn-secondary" onclick="loadDemoData()">Demo-Daten laden</button>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const s = computeStats();
+  const topReason = s.topReason ? reasonById(s.topReason) : null;
+  const reasonTotal = Object.values(s.byReason).reduce((a, b) => a + b, 0) || 1;
+  const reasonRows = Object.entries(s.byReason)
+    .sort((a, b) => b[1] - a[1])
+    .map(([rid, count]) => {
+      const r = reasonById(rid);
+      const pct = (count / reasonTotal) * 100;
+      return `<div class="reason-row">
+        <div class="reason-name">${esc(r.label)}</div>
+        <div class="reason-track"><div class="reason-fill" style="width:${pct.toFixed(1)}%;background:${r.color};"></div></div>
+        <div class="reason-pct">${pct.toFixed(0)} % <span style="color:var(--muted-grey);font-weight:400;">(${count})</span></div>
+      </div>`;
+    }).join('');
+
+  const productRows = s.products.slice(0, 8).map(p => `
+    <tr>
+      <td><strong style="font-weight:500;">${esc(p.produkt)}</strong><br><span style="font-size:11px;color:var(--muted-grey);">${esc(p.kategorie)}</span></td>
+      <td class="num">${p.count}${p.sold ? ` / ${p.sold}` : ''}</td>
+      <td class="num">${p.quote != null ? `<span class="quote-pill ${quoteClass(p.quote)}">${p.quote.toFixed(0)} %</span>` : '<span style="color:var(--muted-grey);">—</span>'}</td>
+      <td><span class="reason-chip">${esc(reasonById(p.topReason).label)}</span></td>
+      <td class="num">${eur(p.value)}</td>
+    </tr>`).join('');
+
+  // 30-Tage-Trend für die Retouren-KPI
+  const trendSub = s.trend30 == null
+    ? 'im Zeitraum'
+    : `<span style="color:${s.trend30 <= 0 ? 'var(--green)' : 'var(--red)'};font-weight:500;">${s.trend30 <= 0 ? '▼' : '▲'} ${Math.abs(s.trend30).toFixed(0)} %</span> vs. Vormonat (${s.last30.count} / ${s.prev30.count})`;
+
+  // Größen-Hotspots
+  const sizeTotal = Object.values(s.bySize).reduce((a, b) => a + b, 0);
+  const sizeRows = Object.entries(s.bySize)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 6)
+    .map(([sz, count]) => {
+      const pct = (count / (sizeTotal || 1)) * 100;
+      return `<div class="reason-row">
+        <div class="reason-name" style="flex-basis:80px;">Größe ${esc(sz)}</div>
+        <div class="reason-track"><div class="reason-fill" style="width:${pct.toFixed(1)}%;background:var(--amber);"></div></div>
+        <div class="reason-pct">${count}</div>
+      </div>`;
+    }).join('');
+
+  // Offene Maßnahmen aus der letzten Analyse
+  const a = state.lastAnalysis;
+  const recCount = a ? (a.empfehlungen || []).length : 0;
+  const doneCount = a ? (a.empfehlungen || []).filter((_, i) => state.doneRecs[a.ts + ':' + i]).length : 0;
+  const heroText = a
+    ? `${doneCount} von ${recCount} Empfehlungen umgesetzt — ${recCount - doneCount > 0 ? `${recCount - doneCount} offene Maßnahmen warten auf dich` : 'alles abgearbeitet, Zeit für eine neue Analyse'}. →`
+    : 'Die KI-Analyse verwandelt diese Zahlen in priorisierte Handlungsempfehlungen — z. B. welche Größentabelle du zuerst überarbeiten solltest. →';
+
+  el.innerHTML = `
+    <p class="view-title">Übersicht</p>
+    <p class="view-subtitle">${state.isDemo ? 'Demo-Datensatz · ' : ''}Zeitraum: letzte ${s.spanDays} Tage · ${s.total} Retouren</p>
+
+    <div class="dash-actions no-print">
+      <button class="btn-secondary" onclick="printReport()">Bericht drucken / PDF</button>
+      <button class="btn-secondary" onclick="exportCSV()">CSV exportieren</button>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Retouren</div>
+        <div class="kpi-value">${s.total}</div>
+        <div class="kpi-sub">${trendSub}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Retourenwert</div>
+        <div class="kpi-value red">${eur(s.value)}</div>
+        <div class="kpi-sub">zzgl. ${eur(s.processCost)} Prozesskosten</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Retourenquote</div>
+        <div class="kpi-value ${s.totalQuote != null ? (s.totalQuote >= 40 ? 'red' : s.totalQuote >= 25 ? 'amber' : 'green') : ''}">${s.totalQuote != null ? s.totalQuote.toFixed(1) + ' %' : '—'}</div>
+        <div class="kpi-sub">${s.totalQuote != null ? `von ${s.totalSold} verkauften Artikeln` : 'Spalte „Verkaeufe" in CSV ergänzen'}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Häufigster Grund</div>
+        <div class="kpi-value" style="font-size:19px;line-height:1.3;padding-top:5px;">${topReason ? esc(topReason.label) : '—'}</div>
+        <div class="kpi-sub">${topReason ? Math.round((s.byReason[s.topReason] / reasonTotal) * 100) + ' % aller Retouren' : ''}</div>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="card">
+        <div class="card-label">Retouren pro Woche (12 Wochen)</div>
+        <div class="chart-wrap">${weeklyChartSVG(s.weeks)}</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Retourengründe</div>
+        ${reasonRows}
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="card">
+        <div class="card-label">Was dich Retouren wirklich kosten</div>
+        <div class="cost-line"><span>Gebundener Warenwert</span><strong>${eur(s.value)}</strong></div>
+        <div class="cost-line"><span>Prozesskosten (${s.total} × ${eur(state.costPerReturn || 0)})</span><strong>${eur(s.processCost)}</strong></div>
+        <div class="cost-line total"><span>Gesamtbelastung</span><strong>${eur(s.value + s.processCost)}</strong></div>
+        <p class="cost-note">Prozesskosten = Porto, Handling, Prüfung, Wiedereinlagerung — im Handel typisch 5–20&nbsp;€ je Retoure. Anpassbar in den <button class="link-btn no-print" onclick="showView('einstellungen')">Einstellungen</button>.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Größen-Hotspots (Retouren wegen Passform)</div>
+        ${sizeRows || '<p style="font-size:13px;color:var(--muted-grey);padding:8px 0;">Keine größenbedingten Retouren mit Größenangabe in den Daten.</p>'}
+        ${sizeRows ? `<p class="cost-note">Häufungen bei einzelnen Größen deuten auf eine abweichende Passform hin — ein klarer Fall für die Größentabelle.</p>` : ''}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Produkte mit dem größten Retouren-Hebel</div>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead><tr><th>Produkt</th><th class="num">Retouren / Verkäufe</th><th class="num">Quote</th><th>Hauptgrund</th><th class="num">Retourenwert</th></tr></thead>
+          <tbody>${productRows}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="ai-hero" style="margin-top:16px;cursor:pointer;" onclick="showView('analyse')">
+      <div class="ai-hero-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4-2.5 5.5S15 17.5 15 19H9c0-1.5-.5-3-1.5-4.5S5 11.5 5 9a7 7 0 0 1 7-7z"/><path d="M9 22h6"/></svg>
+      </div>
+      <div>
+        <h3>Was solltest du jetzt konkret tun?</h3>
+        <p>${heroText}</p>
+      </div>
+    </div>`;
+}
+
+function printReport() {
+  showView('dashboard');
+  setTimeout(() => window.print(), 150);
+}
+
+function exportCSV() {
+  if (!state.returns.length) { toast('Keine Daten zum Exportieren.'); return; }
+  const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const lines = ['Datum;Bestellnummer;Produkt;Kategorie;Groesse;Wert;Grund;Verkaeufe'];
+  for (const r of state.returns) {
+    lines.push([
+      r.datum, r.bestellnr, r.produkt, r.kategorie, r.groesse,
+      String(r.wert ?? 0).replace('.', ','),
+      reasonById(r.grund).label,
+      state.salesByProduct[r.produkt] ?? ''
+    ].map(q).join(';'));
+  }
+  const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+  const aEl = document.createElement('a');
+  aEl.href = URL.createObjectURL(blob);
+  aEl.download = `returix_export_${new Date().toISOString().slice(0, 10)}.csv`;
+  aEl.click();
+  URL.revokeObjectURL(aEl.href);
+  toast(`${state.returns.length} Retouren exportiert.`);
+}
+
+/* ── RENDER: Daten ───────────────────────── */
+let dataFilter = 'alle';
+
+function renderDaten() {
+  const el = document.getElementById('daten-content');
+  const hasData = state.returns.length > 0;
+
+  let dates = '';
+  if (hasData) {
+    const ds = state.returns.map(r => r.datum).sort();
+    const fmt = d => new Date(d).toLocaleDateString('de-DE');
+    dates = `${fmt(ds[0])} – ${fmt(ds[ds.length - 1])}`;
+  }
+
+  const filters = ['alle', ...REASONS.filter(r => state.returns.some(x => x.grund === r.id)).map(r => r.id)];
+  const filtered = dataFilter === 'alle' ? state.returns : state.returns.filter(r => r.grund === dataFilter);
+  const rows = filtered.slice(0, 60).map(r => `
+    <tr>
+      <td style="white-space:nowrap;">${new Date(r.datum).toLocaleDateString('de-DE')}</td>
+      <td>${esc(r.bestellnr)}</td>
+      <td>${esc(r.produkt)}</td>
+      <td>${esc(r.groesse)}</td>
+      <td class="num">${eur(r.wert)}</td>
+      <td><span class="reason-chip" style="border-color:${reasonById(r.grund).color}40;">${esc(reasonById(r.grund).label)}</span></td>
+    </tr>`).join('');
+
+  el.innerHTML = `
+    <div class="card">
+      <div class="card-label">CSV-Upload</div>
+      <div class="dropzone" id="dropzone" onclick="document.getElementById('csv-file-input').click()">
+        <div class="dropzone-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 20h16"/></svg>
+        </div>
+        <h4>CSV-Datei hierher ziehen oder klicken</h4>
+        <p>Spalten: Datum · Bestellnummer · Produkt · Kategorie · Groesse · Wert · Grund · Verkaeufe (optional)</p>
+      </div>
+      ${hasData && !state.isDemo ? `
+      <div class="import-mode">
+        <label><input type="radio" name="import-mode" value="replace" checked> Bestehende Daten ersetzen</label>
+        <label><input type="radio" name="import-mode" value="append"> Ergänzen — Duplikate werden übersprungen</label>
+      </div>` : ''}
+      <div class="upload-meta">
+        <div class="upload-meta-info">
+          ${hasData
+            ? `<strong style="font-weight:500;color:var(--ink);">${state.returns.length} Retouren</strong> geladen ${state.isDemo ? '(Demo)' : ''} · ${dates}`
+            : 'Noch keine Daten geladen.'}
+        </div>
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+          <button class="link-btn" onclick="downloadTemplate()">CSV-Vorlage herunterladen</button>
+          ${hasData ? '<button class="link-btn" onclick="exportCSV()">Daten exportieren</button>' : ''}
+          <button class="link-btn" onclick="loadDemoData()">Demo-Daten laden</button>
+        </div>
+      </div>
+    </div>
+
+    ${hasData ? `
+    <div class="card">
+      <div class="card-label">Retouren (${filtered.length}${filtered.length > 60 ? ', erste 60 angezeigt' : ''})</div>
+      <div class="filter-row">
+        ${filters.map(f => `<button class="filter-chip ${dataFilter === f ? 'active' : ''}" onclick="setDataFilter('${f}')">${f === 'alle' ? 'Alle' : esc(reasonById(f).label)}</button>`).join('')}
+      </div>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead><tr><th>Datum</th><th>Bestellung</th><th>Produkt</th><th>Größe</th><th class="num">Wert</th><th>Grund</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>` : ''}`;
+
+  // wire dropzone
+  const dz = document.getElementById('dropzone');
+  if (dz) {
+    ['dragenter', 'dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('dragover'); }));
+    ['dragleave', 'drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('dragover'); }));
+    dz.addEventListener('drop', e => {
+      const f = e.dataTransfer.files[0];
+      if (f) readCSVFile(f);
+    });
+  }
+}
+
+function setDataFilter(f) { dataFilter = f; renderDaten(); }
+
+function readCSVFile(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    try { importCSV(reader.result); }
+    catch (err) { toast('Import fehlgeschlagen: ' + err.message, 5000); }
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
+/* ── RENDER: KI-Analyse ──────────────────── */
+let analysisRunning = false;
+
+function renderAnalyse() {
+  const el = document.getElementById('analyse-content');
+  const hasData = state.returns.length > 0;
+  const hasKey = !!state.apiKey;
+
+  if (!hasData) {
+    el.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4-2.5 5.5S15 17.5 15 19H9c0-1.5-.5-3-1.5-4.5S5 11.5 5 9a7 7 0 0 1 7-7z"/><path d="M9 22h6"/></svg>
+        </div>
+        <h3>Erst Daten, dann Empfehlungen</h3>
+        <p>Die KI-Analyse braucht deine Retourendaten. Lade eine CSV hoch oder nutze den Demo-Datensatz.</p>
+        <div class="empty-state-actions">
+          <button class="btn-inline" onclick="showView('daten')">Zu den Daten</button>
+          <button class="btn-secondary" onclick="loadDemoData(); showView('analyse')">Demo-Daten laden</button>
+        </div>
+      </div>`;
+    return;
+  }
+
+  if (analysisRunning) {
+    el.innerHTML = `
+      <div class="card ai-loading">
+        <div class="ai-spinner">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4-2.5 5.5S15 17.5 15 19H9c0-1.5-.5-3-1.5-4.5S5 11.5 5 9a7 7 0 0 1 7-7z"/><path d="M9 22h6"/></svg>
+        </div>
+        <p class="ai-loading-label" id="ai-loading-label">Claude analysiert ${state.returns.length} Retouren…</p>
+      </div>`;
+    return;
+  }
+
+  const a = state.lastAnalysis;
+  el.innerHTML = `
+    <div class="ai-hero">
+      <div class="ai-hero-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.5 4-2.5 5.5S15 17.5 15 19H9c0-1.5-.5-3-1.5-4.5S5 11.5 5 9a7 7 0 0 1 7-7z"/><path d="M9 22h6"/></svg>
+      </div>
+      <div style="flex:1;">
+        <h3>Retouren-Analyse mit Claude</h3>
+        <p>Claude wertet Retourenquoten, Gründe und Muster pro Produkt aus und priorisiert, wo du zuerst ansetzen solltest.</p>
+        <div class="ai-status-line">
+          <span class="ai-mode-badge ${hasKey ? 'live' : 'demo'}">${hasKey ? '● Claude API verbunden' : '○ Demo-Modus (kein API-Key)'}</span>
+          ${!hasKey ? '<button class="link-btn" onclick="showView(\'einstellungen\')">API-Key hinterlegen →</button>' : ''}
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <button class="btn-inline" onclick="runAnalysis()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="6 3 20 12 6 21 6 3" fill="currentColor" stroke="none"/></svg>
+        ${a ? 'Analyse aktualisieren' : 'Analyse starten'}
+      </button>
+    </div>
+
+    <div id="analysis-result">${a ? renderAnalysisResult(a) : ''}</div>`;
+}
+
+function renderAnalysisResult(a) {
+  const when = new Date(a.ts).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const all = a.empfehlungen || [];
+  const doneCount = all.filter((_, i) => state.doneRecs[a.ts + ':' + i]).length;
+
+  const recs = all.map((r, i) => {
+    const done = !!state.doneRecs[a.ts + ':' + i];
+    return `
+    <div class="rec-card ${done ? 'done' : ''}">
+      <div class="rec-head">
+        <div class="rec-product">${esc(r.produkt)}</div>
+        <span class="prio-pill ${esc(r.prioritaet)}">Priorität ${esc(r.prioritaet)}</span>
+      </div>
+      <div class="rec-problem">${esc(r.problem)}</div>
+      <div class="rec-action">
+        <span class="rec-action-label">Empfehlung</span>
+        ${esc(r.empfehlung)}
+      </div>
+      ${r.erwarteter_effekt ? `<div class="rec-impact">Erwarteter Effekt: <strong>${esc(r.erwarteter_effekt)}</strong></div>` : ''}
+      <button class="rec-done-btn ${done ? 'done' : ''}" onclick="toggleRec(${i})">${done ? '✓ Umgesetzt' : 'Als umgesetzt markieren'}</button>
+    </div>`;
+  }).join('');
+
+  return `
+    <p class="analysis-meta">Letzte Analyse: ${when} Uhr · ${a.mode === 'claude' ? 'Claude API (claude-opus-4-8)' : 'Demo-Modus — regelbasierte Vorschau, keine echte KI'}</p>
+    <div class="ai-summary">${esc(a.zusammenfassung)}</div>
+    ${all.length ? `<p class="rec-progress"><strong>${doneCount} von ${all.length}</strong> Maßnahmen umgesetzt — dein Fortschritt bleibt gespeichert.</p>` : ''}
+    ${recs}`;
+}
+
+function toggleRec(i) {
+  const a = state.lastAnalysis;
+  if (!a) return;
+  const key = a.ts + ':' + i;
+  if (state.doneRecs[key]) delete state.doneRecs[key];
+  else state.doneRecs[key] = true;
+  saveState();
+  const box = document.getElementById('analysis-result');
+  if (box) box.innerHTML = renderAnalysisResult(a);
+}
+
+async function runAnalysis() {
+  if (analysisRunning) return;
+  analysisRunning = true;
+  renderAnalyse();
+
+  try {
+    const stats = computeStats();
+    let result;
+    if (state.apiKey) {
+      result = await callClaude(stats);
+      result.mode = 'claude';
+    } else {
+      await new Promise(r => setTimeout(r, 1400)); // kurze Denkpause für den Demo-Effekt
+      result = demoAnalysis(stats);
+      result.mode = 'demo';
+    }
+    result.ts = Date.now();
+    state.lastAnalysis = result;
+    state.doneRecs = {};
+    saveState();
+  } catch (err) {
+    toast('Analyse fehlgeschlagen: ' + err.message, 6000);
+  } finally {
+    analysisRunning = false;
+    renderAnalyse();
+  }
+}
+
+/* ── Claude API (Stufe 2) ────────────────── */
+function buildAnalysisPayload(stats) {
+  return {
+    shop: state.shopName || 'Online-Shop',
+    zeitraum_tage: stats.spanDays,
+    retouren_gesamt: stats.total,
+    retourenwert_eur: Math.round(stats.value),
+    prozesskosten_pro_retoure_eur: state.costPerReturn || 0,
+    prozesskosten_gesamt_eur: Math.round(stats.processCost),
+    retourenquote_gesamt_prozent: stats.totalQuote != null ? Number(stats.totalQuote.toFixed(1)) : null,
+    groessen_hotspots: stats.bySize,
+    auswahlbestellungen_gleiches_produkt_mehrere_groessen: stats.multiSizeOrders,
+    gruende_gesamt: Object.fromEntries(Object.entries(stats.byReason).map(([k, v]) => [reasonById(k).label, v])),
+    produkte: stats.products.slice(0, 12).map(p => ({
+      name: p.produkt,
+      kategorie: p.kategorie,
+      retouren: p.count,
+      verkaeufe: p.sold,
+      retourenquote_prozent: p.quote != null ? Number(p.quote.toFixed(1)) : null,
+      retourenwert_eur: Math.round(p.value),
+      gruende: Object.fromEntries(Object.entries(p.reasons).map(([k, v]) => [reasonById(k).label, v])),
+    })),
+  };
+}
+
+const ANALYSIS_SCHEMA = {
+  type: 'object',
+  properties: {
+    zusammenfassung: {
+      type: 'string',
+      description: '3-4 Sätze: wichtigste Erkenntnis, größter Kostenhebel, Gesamteinschätzung. Deutsch, direkt an den Händler gerichtet (du-Form).'
+    },
+    empfehlungen: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          produkt: { type: 'string', description: 'Produktname oder "Shopweit" für übergreifende Maßnahmen' },
+          problem: { type: 'string', description: 'Das Problem in einem Satz, mit konkreten Zahlen aus den Daten' },
+          empfehlung: { type: 'string', description: 'Konkrete, sofort umsetzbare Maßnahme (2-3 Sätze)' },
+          prioritaet: { type: 'string', enum: ['hoch', 'mittel', 'niedrig'] },
+          erwarteter_effekt: { type: 'string', description: 'Realistische Schätzung des Effekts, z. B. Quote-Reduktion oder gesparter Betrag' }
+        },
+        required: ['produkt', 'problem', 'empfehlung', 'prioritaet', 'erwarteter_effekt'],
+        additionalProperties: false
+      }
+    }
+  },
+  required: ['zusammenfassung', 'empfehlungen'],
+  additionalProperties: false
+};
+
+async function callClaude(stats) {
+  const payload = buildAnalysisPayload(stats);
+  const label = document.getElementById('ai-loading-label');
+
+  const body = {
+    model: 'claude-opus-4-8',
+    max_tokens: 8000,
+    thinking: { type: 'adaptive' },
+    system: 'Du bist der Retouren-Analyst von Returix Business, einem B2B-Tool für Online-Händler im D-A-CH-Raum. Du bekommst aggregierte Retourendaten eines Shops und lieferst präzise, umsetzbare Empfehlungen. Regeln: Beziehe dich immer auf konkrete Zahlen aus den Daten. Priorisiere nach Kostenhebel (Retourenwert x Quote). Empfehlungen müssen operativ umsetzbar sein (Größentabelle überarbeiten, Maßangaben in Produktfotos, Materialbeschreibung präzisieren, Qualitätskontrolle beim Lieferanten, Passform-Hinweise im Shop, Fotos am Model verschiedener Größen etc.). Gib 4 bis 6 Empfehlungen, sortiert nach Priorität. Sprich den Händler mit du an. Keine Floskeln.',
+    messages: [{
+      role: 'user',
+      content: 'Analysiere diese Retourendaten und gib priorisierte Handlungsempfehlungen:\n\n' + JSON.stringify(payload, null, 2)
+    }],
+    output_config: { format: { type: 'json_schema', schema: ANALYSIS_SCHEMA } }
+  };
+
+  if (label) label.textContent = 'Claude analysiert ' + stats.total + ' Retouren über ' + payload.produkte.length + ' Produkte…';
+
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': state.apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify(body)
+  });
+
+  if (!resp.ok) {
+    let msg = 'HTTP ' + resp.status;
+    try { msg = (await resp.json()).error?.message || msg; } catch (e) {}
+    if (resp.status === 401) msg = 'API-Key ungültig. Prüfe ihn in den Einstellungen.';
+    throw new Error(msg);
+  }
+
+  const data = await resp.json();
+  if (data.stop_reason === 'refusal') throw new Error('Claude hat die Anfrage abgelehnt.');
+  const textBlock = (data.content || []).find(b => b.type === 'text');
+  if (!textBlock) throw new Error('Keine Antwort erhalten.');
+  return JSON.parse(textBlock.text);
+}
+
+/* ── Demo-Analyse (regelbasierter Fallback) ── */
+const REASON_ACTIONS = {
+  groesse:      { action: p => `Überarbeite die Größentabelle von „${p}" und ergänze konkrete Maßangaben (Brust-, Taillen-, Hüftumfang in cm) direkt in den Produktfotos. Zeige das Produkt am Model in mindestens zwei Größen mit Größenangabe des Models.`, effekt: 'Größenbedingte Retouren lassen sich erfahrungsgemäß um 20–35 % senken' },
+  qualitaet:    { action: p => `Prüfe die letzte Produktionscharge von „${p}" auf Verarbeitungsmängel und kläre mit dem Lieferanten Qualitätsstandards. Ergänze ehrliche Materialdetails (Grammatur, Zusammensetzung, Pflege) auf der Produktseite, um Erwartungen zu kalibrieren.`, effekt: 'Weniger Enttäuschungs-Retouren und besserer Bewertungsschnitt' },
+  beschreibung: { action: p => `Aktualisiere Fotos und Text von „${p}": Farben unter Tageslicht fotografieren, Material-Nahaufnahmen ergänzen und die Beschreibung mit dem tatsächlichen Produkt abgleichen. Kundenbewertungen mit Fotos einbinden.`, effekt: 'Realistische Erwartungen reduzieren Retouren um 10–20 %' },
+  gefallen:     { action: p => `„${p}" wird häufig aus Geschmacksgründen retourniert — prüfe, ob Styling-Fotos und Zielgruppen-Ansprache zum tatsächlichen Käuferprofil passen. Ergänze Kombinations-Vorschläge und mehr Kontextbilder.`, effekt: 'Bessere Vorab-Selbstselektion der Käufer' },
+  lieferung:    { action: p => `Retouren wegen Lieferzeit bei „${p}" deuten auf Fulfillment-Probleme: Kommuniziere realistische Lieferzeiten im Checkout und informiere proaktiv bei Verzögerungen.`, effekt: 'Weniger Frust-Retouren und Stornierungen' },
+  falsch:       { action: p => `Falsch gelieferte Artikel bei „${p}" sind ein Lagerprozess-Problem: Prüfe Pick-Prozess und SKU-Kennzeichnung im Lager.`, effekt: 'Direkt vermeidbare Prozesskosten' },
+  sonstiges:    { action: p => `Erfasse die Retourengründe für „${p}" strukturierter (Pflichtfeld im Retourenportal), um Muster zu erkennen.`, effekt: 'Bessere Datenbasis für die nächste Analyse' },
+};
+
+function demoAnalysis(stats) {
+  const top = stats.products.filter(p => p.count >= 3).slice(0, 5);
+  const empfehlungen = top.map((p, i) => {
+    const r = reasonById(p.topReason);
+    const tmpl = REASON_ACTIONS[p.topReason] || REASON_ACTIONS.sonstiges;
+    const reasonPct = Math.round((p.topReasonCount / p.count) * 100);
+    return {
+      produkt: p.produkt,
+      problem: p.quote != null
+        ? `Retourenquote von ${p.quote.toFixed(0)} % (${p.count} von ${p.sold} verkauften Stück) — ${reasonPct} % davon wegen „${r.label}". Gebundener Retourenwert: ${eur(p.value)}.`
+        : `${p.count} Retouren, davon ${reasonPct} % wegen „${r.label}". Retourenwert: ${eur(p.value)}.`,
+      empfehlung: tmpl.action(p.produkt),
+      prioritaet: i < 2 ? 'hoch' : i < 4 ? 'mittel' : 'niedrig',
+      erwarteter_effekt: tmpl.effekt,
+    };
+  });
+
+  const worst = top[0];
+  const topR = stats.topReason ? reasonById(stats.topReason).label : '—';
+  return {
+    zusammenfassung: `In den letzten ${stats.spanDays} Tagen sind ${stats.total} Retouren im Wert von ${eur(stats.value)} angefallen. Häufigster Grund shopweit: „${topR}". ${worst ? `Der größte Einzelhebel ist „${worst.produkt}"${worst.quote != null ? ` mit einer Retourenquote von ${worst.quote.toFixed(0)} %` : ''} — hier lohnt sich der erste Schritt.` : ''} Hinweis: Dies ist die regelbasierte Demo-Analyse. Mit hinterlegtem Claude-API-Key bekommst du eine deutlich tiefere, individuellere Auswertung.`,
+    empfehlungen,
+  };
+}
+
+/* ── RENDER: Risiko-Radar (Stufe 3) ──────── */
+function renderRisiko() {
+  const el = document.getElementById('risiko-content');
+  const s = state.returns.length ? computeStats() : null;
+  const targetDays = 90; // Mindest-Historie für Mustererkennung
+  const days = s ? Math.min(s.spanDays, targetDays) : 0;
+  const pct = Math.round((days / targetDays) * 100);
+  const enough = days >= targetDays && (s?.total || 0) >= 200;
+
+  // Muster, die sich schon heute aus den vorhandenen Daten ablesen lassen
+  let patternsCard = '';
+  if (s && (s.multiSizeOrders > 0 || s.topSizeCombo)) {
+    const sizeReturns = Object.values(s.bySize).reduce((a, b) => a + b, 0);
+    patternsCard = `
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-label">Risikomuster in deinen heutigen Daten</div>
+      ${s.multiSizeOrders > 0 ? `
+      <div class="pattern-row">
+        <div class="pattern-num">${s.multiSizeOrders}</div>
+        <div>
+          <div class="pattern-title">Auswahlbestellungen erkannt</div>
+          <div class="pattern-desc">Gleiches Produkt in mehreren Größen in einer Bestellung retourniert — der Klassiker unter den planbaren Retouren. Genau hier greift später der Echtzeit-Alert.</div>
+        </div>
+      </div>` : ''}
+      ${s.topSizeCombo ? `
+      <div class="pattern-row">
+        <div class="pattern-num">${s.topSizeCombo.count}</div>
+        <div>
+          <div class="pattern-title">Häufigste Risiko-Kombination: ${esc(s.topSizeCombo.produkt)} in Gr. ${esc(s.topSizeCombo.groesse)}</div>
+          <div class="pattern-desc">${s.topSizeCombo.count} von ${sizeReturns} größenbedingten Retouren entfallen auf diese eine Produkt-Größen-Kombination.</div>
+        </div>
+      </div>` : ''}
+      <p class="cost-note">Das Vorhersagemodell (Stufe 3) erkennt solche Muster automatisch — und warnt dich künftig, bevor die Bestellung rausgeht.</p>
+    </div>`;
+  }
+
+  el.innerHTML = `
+    ${patternsCard}
+    <div class="card risk-progress-card">
+      <div class="card-label">Datenbasis für die Vorhersage</div>
+      <p style="font-size:13.5px;font-weight:300;color:var(--warm-grey);">
+        Das Vorhersagemodell braucht mindestens <strong style="font-weight:500;color:var(--ink);">3 Monate Retourenhistorie</strong> (und ≥ 200 Retouren),
+        um verlässliche Muster zu erkennen — z. B. welche Produkt-Größen-Kombinationen überdurchschnittlich oft zurückkommen.
+      </p>
+      <div class="risk-progress-track"><div class="risk-progress-fill" style="width:${pct}%;"></div></div>
+      <p class="risk-progress-label">
+        ${s ? `${days} von ${targetDays} Tagen Historie gesammelt · ${s.total} Retouren` : 'Noch keine Daten — starte mit dem CSV-Upload.'}
+        ${enough ? ' · <strong style="color:var(--green);">Datenbasis ausreichend — Modul wird freigeschaltet, sobald verfügbar.</strong>' : ''}
+      </p>
+    </div>
+
+    <div class="card risk-preview" style="margin-bottom:16px;">
+      <div class="risk-preview-badge">Vorschau</div>
+      <div class="card-label">So sehen Risiko-Alerts aus</div>
+      <div class="risk-alert">
+        <div class="risk-alert-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        </div>
+        <div>
+          <div class="risk-alert-title">Bestellung #10412 — Retourenrisiko <em>78 %</em></div>
+          <div class="risk-alert-desc">Satin-Kleid „Vera" in Gr. 38 · Kundin hat zuletzt 2 von 3 Kleidern wegen Größe retourniert. Empfohlene Aktion: <em>Größencheck-Mail vor Versand senden.</em></div>
+        </div>
+      </div>
+      <div class="risk-alert" style="border-left-color:var(--red);">
+        <div class="risk-alert-icon" style="background:var(--red-l);color:var(--red);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        </div>
+        <div>
+          <div class="risk-alert-title">Mehrgrößen-Bestellung #10415 — Retourenrisiko <em style="color:var(--red);">91 %</em></div>
+          <div class="risk-alert-desc">Gleiches Produkt in Gr. 36 <strong>und</strong> 38 bestellt — klassische Auswahlbestellung. Empfohlene Aktion: <em>Passform-Beratung anbieten, nur eine Größe versenden.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">So funktioniert die Risikovorhersage</div>
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-num"></div>
+          <div>
+            <div class="step-title">Historie sammeln</div>
+            <div class="step-desc">3–6 Monate Retourendaten mit Gründen, Größen und Kundenmustern — genau das, was du jetzt schon in Stufe 1 aufbaust.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num"></div>
+          <div>
+            <div class="step-title">Muster erkennen</div>
+            <div class="step-desc">Das Modell lernt, welche Kombinationen aus Produkt, Größe, Warenkorb und Kundenhistorie überdurchschnittlich oft zur Retoure führen.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num"></div>
+          <div>
+            <div class="step-title">Alert bei der Bestellung</div>
+            <div class="step-desc">Noch bevor die Ware rausgeht, bekommst du einen Hinweis bei Hochrisiko-Bestellungen — inklusive empfohlener Aktion.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num"></div>
+          <div>
+            <div class="step-title">Proaktiv reagieren</div>
+            <div class="step-desc">Größencheck-Mail, Passform-Beratung oder angepasster Versand: Du verhinderst die Retoure, statt sie zu verwalten.</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ── RENDER: Einstellungen ───────────────── */
+function renderEinstellungen() {
+  const el = document.getElementById('einstellungen-content');
+  el.innerHTML = `
+    <div class="card">
+      <div class="settings-row">
+        <div class="settings-row-title">Shop-Name</div>
+        <div class="settings-row-desc">Wird im Dashboard und in der KI-Analyse verwendet.</div>
+        <div class="settings-inline">
+          <input class="settings-input" id="set-shop-name" value="${esc(state.shopName)}" placeholder="Name deines Shops">
+          <button class="btn-secondary" onclick="saveShopName()">Speichern</button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-title">Prozesskosten pro Retoure</div>
+        <div class="settings-row-desc">Porto, Handling, Prüfung, Wiedereinlagerung — im Handel typischerweise 5–20&nbsp;€ je Retoure. Fließt in die Kostenübersicht und die KI-Analyse ein.</div>
+        <div class="settings-inline">
+          <input class="settings-input" id="set-cost" style="max-width:140px;" inputmode="decimal" value="${(state.costPerReturn || 0).toLocaleString('de-DE')}">
+          <span style="font-size:13px;color:var(--warm-grey);">€ pro Retoure</span>
+          <button class="btn-secondary" onclick="saveCost()">Speichern</button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-title">Claude API-Key <span class="stage-tag live" style="margin-left:6px;">Stufe 2</span></div>
+        <div class="settings-row-desc">
+          Für die echte KI-Analyse. Den Key bekommst du unter <strong>platform.claude.com</strong>.
+          Er wird ausschließlich lokal in deinem Browser gespeichert und nur direkt an die Anthropic-API gesendet — nie an Returix-Server.
+          Ohne Key läuft die Analyse im Demo-Modus.
+        </div>
+        <div class="settings-inline">
+          <input class="settings-input" id="set-api-key" type="password" value="${esc(state.apiKey)}" placeholder="sk-ant-…" autocomplete="off">
+          <button class="btn-secondary" onclick="saveApiKey()">Speichern</button>
+          ${state.apiKey ? '<button class="link-btn" onclick="removeApiKey()">Key entfernen</button>' : ''}
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-title">Integrationen</div>
+        <div class="settings-row-desc">Damit der CSV-Upload bald Geschichte ist.</div>
+        <div class="integration-card">
+          <div class="integration-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 2l1.5 4h9L18 2"/><path d="M3 6h18l-1.5 14a2 2 0 0 1-2 1.8h-11A2 2 0 0 1 4.5 20L3 6z"/></svg>
+          </div>
+          <div>
+            <div class="integration-title">Shopify</div>
+            <div class="integration-desc">Automatische Synchronisation von Bestellungen &amp; Retouren</div>
+          </div>
+          <span class="integration-badge">In Entwicklung</span>
+        </div>
+        <div class="integration-card" style="margin-top:8px;">
+          <div class="integration-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12h8M12 8v8"/></svg>
+          </div>
+          <div>
+            <div class="integration-title">WooCommerce &amp; Shopware</div>
+            <div class="integration-desc">Auf der Roadmap nach dem Shopify-Launch</div>
+          </div>
+          <span class="integration-badge" style="background:var(--stone);color:var(--warm-grey);">Geplant</span>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-title">Daten</div>
+        <div class="settings-row-desc">Alle Retourendaten und Analysen werden nur lokal in diesem Browser gespeichert.</div>
+        <div class="settings-inline">
+          <button class="btn-danger" onclick="clearData()">Retourendaten löschen</button>
+          <button class="btn-danger" onclick="fullReset()">Alles zurücksetzen (inkl. Login)</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function saveShopName() {
+  const v = document.getElementById('set-shop-name').value.trim();
+  if (!v) { toast('Bitte einen Shop-Namen eingeben.'); return; }
+  state.shopName = v;
+  saveState();
+  document.getElementById('shop-badge-name').textContent = v;
+  toast('Shop-Name gespeichert.');
+}
+function saveCost() {
+  const v = parseMoney(document.getElementById('set-cost').value);
+  if (v < 0 || v > 500) { toast('Bitte einen realistischen Wert zwischen 0 und 500 € eingeben.'); return; }
+  state.costPerReturn = v;
+  saveState();
+  toast(`Prozesskosten gespeichert: ${eur(v)} pro Retoure.`);
+}
+function saveApiKey() {
+  const v = document.getElementById('set-api-key').value.trim();
+  if (v && !v.startsWith('sk-ant-')) { toast('Das sieht nicht nach einem Anthropic-API-Key aus (beginnt mit sk-ant-…).', 5000); return; }
+  state.apiKey = v;
+  saveState();
+  renderEinstellungen();
+  toast(v ? 'API-Key gespeichert — KI-Analyse läuft jetzt über Claude.' : 'API-Key entfernt.');
+}
+function removeApiKey() {
+  state.apiKey = '';
+  saveState();
+  renderEinstellungen();
+  toast('API-Key entfernt — Analyse läuft im Demo-Modus.');
+}
+function fullReset() {
+  if (!confirm('Wirklich alles zurücksetzen? Daten, API-Key und Login werden gelöscht.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+/* ── Navigation & Init ───────────────────── */
+const RENDERERS = {
+  dashboard: renderDashboard,
+  analyse: renderAnalyse,
+  risiko: renderRisiko,
+  daten: renderDaten,
+  einstellungen: renderEinstellungen,
+};
+
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+  (RENDERERS[name] || (() => {}))();
+  window.scrollTo({ top: 0 });
+}
+
+function renderAll() {
+  const active = document.querySelector('.view.active');
+  const name = active ? active.id.replace('view-', '') : 'dashboard';
+  (RENDERERS[name] || renderDashboard)();
+}
+
+function doLogin() {
+  const v = document.getElementById('login-shop-name').value.trim();
+  if (!v) { toast('Bitte gib den Namen deines Shops ein.'); return; }
+  state.shopName = v;
+  saveState();
+  enterApp();
+}
+
+function enterApp() {
+  document.getElementById('screen-login').classList.remove('active');
+  document.getElementById('screen-app').classList.add('active');
+  document.getElementById('shop-badge-name').textContent = state.shopName;
+  renderDashboard();
+}
+
+document.getElementById('csv-file-input').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (f) readCSVFile(f);
+  e.target.value = '';
+});
+document.getElementById('login-shop-name').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+loadState();
+if (state.shopName) enterApp();
+</script>
+</body>
+</html>
